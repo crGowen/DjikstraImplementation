@@ -1,0 +1,25 @@
+﻿  stdafx.cpp
+  djikalg.cpp
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(55): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(63): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(75): warning C4018: '>=': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(84): warning C4018: '>=': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(94): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(108): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(122): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(130): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(143): warning C4018: '>=': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(148): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(155): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(163): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(173): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(187): warning C4018: '>=': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(191): warning C4018: '>=': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(196): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(215): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(235): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(253): warning C4018: '>=': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(264): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(272): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\djikstraimplementation\djikstraimplementation\djikalg.cpp(286): warning C4018: '<': signed/unsigned mismatch
+  DjikstraImplementation.vcxproj -> C:\Users\Carl\source\repos\DjikstraImplementation\x64\Debug\DjikstraImplementation.lib
