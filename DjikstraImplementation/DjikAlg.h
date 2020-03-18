@@ -6,32 +6,33 @@ namespace DjikAlg {
 			class Connection {
 			private:
 				Node* connectedNode;
-				__int32 edgeCost;
+				unsigned __int32 edgeCost;
 			public:
 				Connection();
-				Connection(Node* n, __int32 c);
+				Connection(Node* n, unsigned __int32 c);
 				Node* GetDestPointer();
-				__int32 GetEdgeCost();
+				void ShiftPointerDown();
+				unsigned __int32 GetEdgeCost();
 
 			};
 
 			Node();
 			Node(char identifier);
-			void AddConnection(Node* destination, __int32 cost);
+			void AddConnection(Node* destination, unsigned __int32 cost);
 			char GetConnectedNode(int index);
-			__int32 GetConnectionCost(int index);
-			__int32 GetConnectionCost(char identifier);
+			unsigned __int32 GetConnectionCost(int index);
+			unsigned __int32 GetConnectionCost(char identifier);
 
 			void RemoveConnection(int index);
 			void RemoveConnection(char identifier);
 			char GetIdentifier();
-			void SetIdentifier(char c);
-			__int32 GetAssociatedCost();
-			void SetAssociatedCost(__int32 i);
+			void SetIdentifier(char identifier);
+			unsigned __int32 GetAssociatedCost();
+			void SetAssociatedCost(unsigned __int32 i);
 			bool GetIsLocked();
 			void LockNode();
+			void ShiftConnectionPointers(Node* address);
 			unsigned __int32 GetNumConnections();
-			void CleanUp();
 
 		private:
 
@@ -39,7 +40,7 @@ namespace DjikAlg {
 			unsigned __int32 numConnections;
 			unsigned __int32 numConnectionSlots;
 			char id;
-			__int32 associatedCost;
+			unsigned __int32 associatedCost;
 			bool isLocked;
 		};
 
@@ -48,12 +49,16 @@ namespace DjikAlg {
 		void RemoveNode(int index);
 		void RemoveNode(char identifier);
 
-		void ConnectNodes(int index1, int index2, __int32 edgeCost);
-		void ConnectNodes(int index1, int index2, __int32 forwardCost, __int32 backwardCost);
-		void ConnectNodes(char id1, char id2, __int32 edgeCost);
-		void ConnectNodes(char id1, char id2, __int32 forwardCost, __int32 backwardCost);
+		void ConnectNodes(int index1, int index2, unsigned __int32 edgeCost);
+		void ConnectNodes(int index1, int index2, unsigned __int32 forwardCost, unsigned __int32 backwardCost);
+		void ConnectNodes(char id1, char id2, unsigned __int32 edgeCost);
+		void ConnectNodes(char id1, char id2, unsigned __int32 forwardCost, unsigned __int32 backwardCost);
 
 		void DisconnectNodes(int index1, int index2);
+		void DisconnectNodes(char id1, char id2);
+
+		void RenameNode(int index, char newName);
+		void RenameNode(char identifier, char newName);
 
 		void ListNodes();
 
