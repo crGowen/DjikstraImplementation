@@ -34,6 +34,7 @@ namespace DjikAlg {
 			bool GetIsLocked();
 			bool GetConnectionIsLocked(int index);
 			void LockNode();
+			void UnlockNode();
 			void ShiftConnectionPointers(Node* address);
 			unsigned __int32 GetNumConnections();
 			char GetPriorNode();
@@ -90,6 +91,7 @@ namespace DjikAlg {
 		Node* nodes;
 		unsigned __int32 numNodes;
 		unsigned __int32 numNodeSlots;
+		bool optimalsFound;
 
 
 		char* optimalPath;

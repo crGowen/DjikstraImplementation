@@ -4,28 +4,36 @@
 
 namespace DjikAlg
 {
-	//Connection
+	// Connection
+
+	// Default constructor
 	Network::Node::Connection::Connection() {
 	}
 
+	// Parametized constructor
 	Network::Node::Connection::Connection(Node* n, unsigned __int32 c) {
 		connectedNode = n;
 		edgeCost = c;
 	}
 
+	// Return point to the node at the other end of the connection
 	Network::Node* Network::Node::Connection::GetDestPointer() {
 		return connectedNode;
 	}
 
+	// Shift pointer addresses down (used when an entry in the node list is removed)
 	void Network::Node::Connection::ShiftPointerDown() {
 		connectedNode -= 1;
 	}
 
+	// Return the edge cost of the connection
 	unsigned __int32 Network::Node::Connection::GetEdgeCost() {
 		return edgeCost;
 	}
 
-	//Node
+	// Node
+
+	// Default constructor
 	Network::Node::Node() {
 		id = '\0';
 		numConnections = 0;
@@ -35,6 +43,7 @@ namespace DjikAlg
 		priorNode = '\0';
 	}
 
+	// Parametized constructor
 	Network::Node::Node(char identifier) {
 		id = identifier;
 		numConnections = 0;
@@ -44,31 +53,38 @@ namespace DjikAlg
 		priorNode = '\0';
 	}
 
+	// Get the prior node property (used for finding the optimal route during the run of Djikstra's Algorithm)
 	char Network::Node::GetPriorNode() {
 		return priorNode;
 	}
 
+	// Set the prior node property (used for finding the optimal route during the run of Djikstra's Algorithm)
 	void Network::Node::SetPriorNode(char c) {
 		priorNode = c;
 	}
 
+	// For the node in the *this* node's list of connections at the specified index, set *this* node as its prior node
 	void Network::Node::SetAsConnectionPriorNode(int index, unsigned __int32 newAssociatedCost) {
 		connections[index].GetDestPointer()->SetPriorNode(this->GetIdentifier());
 		connections[index].GetDestPointer()->SetAssociatedCost(newAssociatedCost);
 	}
 
+	// Return the character id for this node
 	char Network::Node::GetIdentifier() {
 		return id;
 	}
 
+	// Set the character id for this node
 	void Network::Node::SetIdentifier(char identifier) {
 		id = identifier;
 	}
 
+	// Get the number of connections that are currently registered to this node
 	unsigned __int32 Network::Node::GetNumConnections() {
 		return numConnections;
 	}
 
+	// Add a new connection to the list of connections registered to this node
 	void Network::Node::AddConnection(Node* destination, unsigned __int32 cost) {
 		if (numConnectionSlots == 0) {
 			connections = new Connection[8];
@@ -96,6 +112,7 @@ namespace DjikAlg
 		numConnections++;
 	}
 
+	// Get the ID of the node at the end of the connection specified by the index argument
 	char Network::Node::GetConnectedNode(int index) {
 		if (index >= numConnections) {
 			std::cout << std::endl << "NodeInfo-CONNECTIONS-oob Error." << std::endl;
@@ -105,6 +122,7 @@ namespace DjikAlg
 		return connections[index].GetDestPointer()->GetIdentifier();
 	}
 
+	// Get the edge cost of the connection specified by the index argument
 	unsigned __int32 Network::Node::GetConnectionCost(int index) {
 		if (index >= numConnections) {
 			std::cout << std::endl << "NodeInfo-CONNECTIONS-oob Error." << std::endl;
@@ -114,6 +132,7 @@ namespace DjikAlg
 		return connections[index].GetEdgeCost();
 	}
 
+	// Get the edge cost of the connection that matches the specified node ID argument
 	unsigned __int32 Network::Node::GetConnectionCost(char identifier) {
 		int index = -1;
 		for (int i = 0; i < numConnections; i++) {
@@ -131,10 +150,12 @@ namespace DjikAlg
 		return GetConnectionCost(index);
 	}
 
+	// Get the associated cost that is registered to a connection's node, specified by index argument (used in Djikstra's Algorithm)
 	unsigned __int32 Network::Node::GetConnectionAssociatedCost(int index) {
 		return connections[index].GetDestPointer()->GetAssociatedCost();
 	}
 
+	// Remove a connection from the list of connections specified by the index argument
 	void Network::Node::RemoveConnection(int index) {
 		if (index >= numConnections) {
 			std::cout << std::endl << "RemoveConnection-CONNECTIONS-oob Error." << std::endl;
@@ -165,6 +186,7 @@ namespace DjikAlg
 		}
 	}
 
+	// Remove a connection from the list of connections specified by the node ID argument
 	void Network::Node::RemoveConnection(char identifier) {
 		int index = -1;
 		for (int i = 0; i < numConnections; i++) {
@@ -182,6 +204,7 @@ namespace DjikAlg
 		RemoveConnection(index);
 	}
 
+	// For a given memory address (provided in the argument) shift all relevant pointers (called when a code is removed from the list of nodes; works as a quasi-interface for ShiftPointerDown() )
 	void Network::Node::ShiftConnectionPointers(Node* address) {
 		for (int i = 0; i < numConnections; i++) {
 			if (connections[i].GetDestPointer() > address) {
@@ -190,31 +213,44 @@ namespace DjikAlg
 		}
 	}
 
+	// Set the associated cost that is registered to this node (used in Djikstra's Algorithm)
 	void Network::Node::SetAssociatedCost(unsigned __int32 i) {
 		associatedCost = i;
 	}
 
+	// Get the associated cost that is registered to this node (used in Djikstra's Algorithm)
 	unsigned __int32 Network::Node::GetAssociatedCost() {
 		return associatedCost;
 	}
 
+	// Get the state of the isLocked property (used in Djikstra's Algorithm)
 	bool Network::Node::GetIsLocked() {
 		return isLocked;
 	}
 
+	// Get the isLocked property state for a connection specified by index argument
 	bool Network::Node::GetConnectionIsLocked(int index) {
 		return connections[index].GetDestPointer()->GetIsLocked();
 	}
 
+	// Set this node's isLocked property to true
 	void Network::Node::LockNode() {
 		isLocked = true;
 	}
 
+	// Set this node's isLocked property to false
+	void Network::Node::UnlockNode() {
+		isLocked = false;
+	}
+
+	// Clear the dynamic memory for connections array
 	void Network::Node::ClearConnections() {
 		delete[] connections;
 	}
 
 	//Network
+
+	// Add a node to the network, specifying what its ID should be
 	void Network::AddNode(char identifier) {
 		for (int i = 0; i < numNodes; i++) {
 			if (identifier == nodes[i].GetIdentifier()) {
@@ -249,6 +285,7 @@ namespace DjikAlg
 		numNodes++;
 	}
 
+	// Remove a node from the network, specified by index
 	void Network::RemoveNode(int index) {
 		if (index >= numNodes) {
 			std::cout << std::endl << "RemoveNode Error: The specified index '" << index << "' is too high for the number of nodes in the network," << std::endl << "you must specify an index less than " << numNodes << "." << std::endl;
@@ -283,6 +320,7 @@ namespace DjikAlg
 		}
 	}
 
+	// Remove a node from the network, specified by node ID
 	void Network::RemoveNode(char identifier) {
 		int index = -1;
 		for (int i = 0; i < numNodes; i++) {
@@ -300,6 +338,7 @@ namespace DjikAlg
 		RemoveNode(index);
 	}
 
+	// Connect two nodes together, specified by index, with an asymmetrical edgecost (use case example: construct an energy-cost network, going up-hill costs more than going down, so the edgecost needs to be asymmetrical to produce accurate result)
 	void Network::ConnectNodes(int index1, int index2, unsigned __int32 forwardCost, unsigned __int32 backwardCost) {
 		if (index1==index2) {
 			std::cout << std::endl << "ConnectNodes Error: You cannot connect a node to itself." << std::endl;
@@ -326,10 +365,12 @@ namespace DjikAlg
 		nodes[index2].AddConnection(&nodes[index1], backwardCost);
 	}
 	
+	// Connect two nodes together, specified by index, with specified edgecost
 	void Network::ConnectNodes(int index1, int index2, unsigned __int32 edgeCost) {
 		ConnectNodes(index1, index2, edgeCost, edgeCost);
 	}
 
+	// Connect two nodes together, specified by node IDs, with an asymmetrical edgecost (use case example: construct an energy-cost network, going up-hill costs more than going down, so the edgecost needs to be asymmetrical to produce accurate result)
 	void Network::ConnectNodes(char id1, char id2, unsigned __int32 forwardCost, unsigned __int32 backwardCost) {
 		int index1 = -1;
 		int index2 = -1;
@@ -353,6 +394,7 @@ namespace DjikAlg
 		ConnectNodes(index1, index2, forwardCost, backwardCost);
 	}
 
+	// Connect two nodes together, specified by node IDs, with specified edgecost
 	void Network::ConnectNodes(char id1, char id2, unsigned __int32 edgeCost) {
 		int index1 = -1;
 		int index2 = -1;
@@ -376,6 +418,7 @@ namespace DjikAlg
 		ConnectNodes(index1, index2, edgeCost);
 	}
 
+	// Erase the connection between two nodes, specified by index
 	void Network::DisconnectNodes(int index1, int index2) {
 		if (index1 >= numNodes) {
 			std::cout << std::endl << "DisconnectNodes Error: The specified index '" << index1 << "' is too high for the number of nodes in the network," << std::endl << "you must specify an index less than " << numNodes << "." << std::endl;
@@ -407,6 +450,7 @@ namespace DjikAlg
 		}
 	}
 
+	// Erase the connection between two nodes, specified by node IDs
 	void Network::DisconnectNodes(char id1, char id2) {
 		int index1 = -1;
 		int index2 = -1;
@@ -430,6 +474,7 @@ namespace DjikAlg
 		DisconnectNodes(index1, index2);
 	}
 
+	// Get detailed info on the node specified by index
 	void Network::DetailedInfoForNode(int index) {
 		if (index >= numNodes) {
 			std::cout << std::endl << "NodeInfo Error: The specified index '" << index << "' is too high for the number of nodes in the network," << std::endl << "you must specify an index less than " << numNodes << "." << std::endl;
@@ -448,6 +493,7 @@ namespace DjikAlg
 		}
 	}
 
+	// Get detailed info on the node specified by node ID
 	void Network::DetailedInfoForNode(char identifier) {
 		int index = -1;
 		for (int i = 0; i < numNodes; i++) {
@@ -465,6 +511,7 @@ namespace DjikAlg
 		DetailedInfoForNode(index);
 	}
 
+	// Rename the specified (by index) node,  giving it a new ID
 	void Network::RenameNode(int index, char newName) {
 		for (int i = 0; i < numNodes; i++) {
 			if (newName == nodes[i].GetIdentifier()) {
@@ -476,6 +523,7 @@ namespace DjikAlg
 		nodes[index].SetIdentifier(newName);
 	}
 
+	// Rename the specified (by node ID) node, giving it a new ID
 	void Network::RenameNode(char identifier, char newName) {
 		int index = -1;
 		for (int i = 0; i < numNodes; i++) {
@@ -493,6 +541,7 @@ namespace DjikAlg
 		RenameNode(index, newName);
 	}
 
+	// Provide a non-detailed list of nodes in the network
 	void Network::ListNodes() {
 		std::cout << std::endl << "Node list:" << std::endl;
 		for (int i = 0; i < numNodes; i++) {
@@ -500,6 +549,7 @@ namespace DjikAlg
 		}
 	}
 
+	// Provide a detailed list of nodes in the network
 	void Network::DetailedInfoAllNodes() {
 		std::cout << std::endl << "Node list:" << std::endl;
 		for (int i = 0; i < numNodes; i++) {
@@ -511,9 +561,15 @@ namespace DjikAlg
 		}
 	}
 
+	// Run Djikstra's Algorithm on the network, specified by index
 	void Network::RunDjikstrasAlgorithm(int startNode, int destNode) {
 		delete[] optimalPath;
 		optimalPath = new char[numNodes];
+
+		for (int i = 0; i < numNodes; i++) {
+			nodes[i].SetAssociatedCost(2000000000);
+			nodes[i].UnlockNode();
+		}
 
 		nodes[startNode].SetAssociatedCost(0);
 
@@ -533,13 +589,16 @@ namespace DjikAlg
 			//lock it
 			nodes[selectedNode].LockNode();
 
+			// exit algorithm is we lock the destination/target node
 			if (selectedNode == destNode) {
 				optimalCost = nodes[selectedNode].GetAssociatedCost();
 
 				optimalPath[numNodes-1] = nodes[selectedNode].GetIdentifier();
 				int cPos = 1;
+
+				// write optimalpath string
 				while (true) {
-					if (optimalPath[numNodes-cPos] == startNode) {
+					if (optimalPath[numNodes-cPos] == nodes[startNode].GetIdentifier()) {
 						//move null chars to end
 						char* tempString = new char[numNodes];
 						int j = 0;
@@ -568,6 +627,7 @@ namespace DjikAlg
 							}
 						}
 						delete[] tempString;
+						optimalsFound = true;
 						return;
 					}
 					int index = -1;
@@ -578,13 +638,12 @@ namespace DjikAlg
 							i = numNodes;
 						}
 					}
-
 					cPos++;
 					optimalPath[numNodes - cPos] = nodes[index].GetPriorNode();
 				}
 			}
 
-			//run through each connection and update associated costs if needed
+			// else run through each connection and update associated costs if needed
 			for (int i = 0; i < nodes[selectedNode].GetNumConnections(); i++) {
 				if (!nodes[selectedNode].GetConnectionIsLocked(i)) {
 					unsigned int moveCost = nodes[selectedNode].GetAssociatedCost() + nodes[selectedNode].GetConnectionCost(i);
@@ -597,6 +656,7 @@ namespace DjikAlg
 		}
 	}
 
+	// Run Djikstra's Algorithm on the network, specified by node IDs
 	void Network::RunDjikstrasAlgorithm(char startNode, char destNode) {
 		int index1 = -1;
 		int index2 = -1;
@@ -620,19 +680,42 @@ namespace DjikAlg
 		RunDjikstrasAlgorithm(index1, index2);
 	}
 
+	// After Djikstra's Algorithm has run on the network, get the optimal path as a nullchar terminated char array
 	char* Network::GetOptimalPath() {
+		if (!optimalsFound) std::cout << std::endl << "GetOptimalPath Error: Algorithm has not yet run, and the optimal path is not yet defined (UNDEFINED)." << std::endl;			
 		return optimalPath;
+
 	}
 
+	// After Djikstra's Algorithm has run on the network, get the optimal cost
 	__int32 Network::GetOptimalCost() {
+		if (!optimalsFound)
+			std::cout << std::endl << "GetOptimalCost Error: Algorithm has not yet run, and the optimal cost is not yet defined (0)." << std::endl;
 		return optimalCost;
 	}
 
+	// Default constructor
 	Network::Network() {
 		numNodes = 0;
 		numNodeSlots = 0;
+		optimalsFound = false;
+
+		// optimalPath and cost = undefined
+		optimalPath = new char[9];
+		optimalPath[0] = 'U';
+		optimalPath[1] = 'N';
+		optimalPath[2] = 'D';
+		optimalPath[3] = 'E';
+		optimalPath[4] = 'F';
+		optimalPath[5] = 'I';
+		optimalPath[6] = 'N';
+		optimalPath[7] = 'E';
+		optimalPath[8] = 'D';
+
+		optimalCost = 0;
 	}
 
+	// Clear all dynamically allocated memory for this network object (attempting to use this network object's methods after calling ClearAllocatedMemory() may cause undefined behavior, only use this function once you are finished)
 	void Network::ClearAllocatedMemory() {
 		delete[] optimalPath;
 
