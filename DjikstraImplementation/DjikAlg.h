@@ -32,6 +32,7 @@ namespace DjikAlg {
 			unsigned __int32 GetAssociatedCost();
 			void SetAssociatedCost(unsigned __int32 i);
 			bool GetIsLocked();
+			bool GetConnectionIsLocked(int index);
 			void LockNode();
 			void ShiftConnectionPointers(Node* address);
 			unsigned __int32 GetNumConnections();

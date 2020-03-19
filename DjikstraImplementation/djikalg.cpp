@@ -202,6 +202,10 @@ namespace DjikAlg
 		return isLocked;
 	}
 
+	bool Network::Node::GetConnectionIsLocked(int index) {
+		return connections[index].GetDestPointer()->GetIsLocked();
+	}
+
 	void Network::Node::LockNode() {
 		isLocked = true;
 	}
@@ -582,10 +586,12 @@ namespace DjikAlg
 
 			//run through each connection and update associated costs if needed
 			for (int i = 0; i < nodes[selectedNode].GetNumConnections(); i++) {
-				unsigned int moveCost = nodes[selectedNode].GetAssociatedCost() + nodes[selectedNode].GetConnectionCost(i);
-				if (moveCost < nodes[selectedNode].GetConnectionAssociatedCost(i)) {
-					nodes[selectedNode].SetAsConnectionPriorNode(i, moveCost);
-				}
+				if (!nodes[selectedNode].GetConnectionIsLocked(i)) {
+					unsigned int moveCost = nodes[selectedNode].GetAssociatedCost() + nodes[selectedNode].GetConnectionCost(i);
+					if (moveCost < nodes[selectedNode].GetConnectionAssociatedCost(i)) {
+						nodes[selectedNode].SetAsConnectionPriorNode(i, moveCost);
+					}
+				}				
 			}
 
 		}
