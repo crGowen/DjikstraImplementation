@@ -23,6 +23,8 @@ namespace DjikAlg {
 			unsigned __int32 GetConnectionCost(int index);
 			unsigned __int32 GetConnectionCost(char identifier);
 
+			unsigned __int32 GetConnectionAssociatedCost(int index);
+
 			void RemoveConnection(int index);
 			void RemoveConnection(char identifier);
 			char GetIdentifier();
@@ -33,6 +35,12 @@ namespace DjikAlg {
 			void LockNode();
 			void ShiftConnectionPointers(Node* address);
 			unsigned __int32 GetNumConnections();
+			char GetPriorNode();
+			void SetPriorNode(char c);
+
+			void ClearConnections();
+
+			void SetAsConnectionPriorNode(int index, unsigned __int32 newAssociatedCost);
 
 		private:
 
@@ -42,6 +50,7 @@ namespace DjikAlg {
 			char id;
 			unsigned __int32 associatedCost;
 			bool isLocked;
+			char priorNode;
 		};
 
 		void AddNode(char identifier);
@@ -61,11 +70,13 @@ namespace DjikAlg {
 		void RenameNode(char identifier, char newName);
 
 		void ListNodes();
+		void DetailedInfoAllNodes();
 
 		void DetailedInfoForNode(int index);
 		void DetailedInfoForNode(char identifier);
 
-		void RunDjikstrasAlgorithm(char startNode, char destNode);
+		void RunDjikstrasAlgorithm(int startNode, int destNode);
+		void RunDjikstrasAlgorithm(char startNode, char destNode);		
 
 		char* GetOptimalPath(); // remember to add null character
 		__int32 GetOptimalCost();
@@ -75,9 +86,6 @@ namespace DjikAlg {
 		Network();
 
 	private:
-		unsigned __int32 popSize;
-
-
 		Node* nodes;
 		unsigned __int32 numNodes;
 		unsigned __int32 numNodeSlots;

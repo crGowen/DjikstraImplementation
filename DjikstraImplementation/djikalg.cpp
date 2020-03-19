@@ -31,6 +31,8 @@ namespace DjikAlg
 		numConnections = 0;
 		numConnectionSlots = 0;
 		isLocked = false;
+		associatedCost = 2000000000;
+		priorNode = '\0';
 	}
 
 	Network::Node::Node(char identifier) {
@@ -38,6 +40,21 @@ namespace DjikAlg
 		numConnections = 0;
 		numConnectionSlots = 0;
 		isLocked = false;
+		associatedCost = 2000000000;
+		priorNode = '\0';
+	}
+
+	char Network::Node::GetPriorNode() {
+		return priorNode;
+	}
+
+	void Network::Node::SetPriorNode(char c) {
+		priorNode = c;
+	}
+
+	void Network::Node::SetAsConnectionPriorNode(int index, unsigned __int32 newAssociatedCost) {
+		connections[index].GetDestPointer()->SetPriorNode(this->GetIdentifier());
+		connections[index].GetDestPointer()->SetAssociatedCost(newAssociatedCost);
 	}
 
 	char Network::Node::GetIdentifier() {
@@ -100,7 +117,10 @@ namespace DjikAlg
 	unsigned __int32 Network::Node::GetConnectionCost(char identifier) {
 		int index = -1;
 		for (int i = 0; i < numConnections; i++) {
-			if (identifier == connections[i].GetDestPointer()->GetIdentifier()) index = i;
+			if (identifier == connections[i].GetDestPointer()->GetIdentifier()) {
+				index = i;
+				i = numConnections;
+			}
 		}
 
 		if (index == -1) {
@@ -109,6 +129,10 @@ namespace DjikAlg
 		}
 
 		return GetConnectionCost(index);
+	}
+
+	unsigned __int32 Network::Node::GetConnectionAssociatedCost(int index) {
+		return connections[index].GetDestPointer()->GetAssociatedCost();
 	}
 
 	void Network::Node::RemoveConnection(int index) {
@@ -144,7 +168,10 @@ namespace DjikAlg
 	void Network::Node::RemoveConnection(char identifier) {
 		int index = -1;
 		for (int i = 0; i < numConnections; i++) {
-			if (identifier == connections[i].GetDestPointer()->GetIdentifier()) index = i;
+			if (identifier == connections[i].GetDestPointer()->GetIdentifier()) {
+				index = i;
+				i = numConnections;
+			}
 		}
 
 		if (index == -1) {
@@ -177,6 +204,10 @@ namespace DjikAlg
 
 	void Network::Node::LockNode() {
 		isLocked = true;
+	}
+
+	void Network::Node::ClearConnections() {
+		delete[] connections;
 	}
 
 	//Network
@@ -251,7 +282,10 @@ namespace DjikAlg
 	void Network::RemoveNode(char identifier) {
 		int index = -1;
 		for (int i = 0; i < numNodes; i++) {
-			if (identifier == nodes[i].GetIdentifier()) index = i;
+			if (identifier == nodes[i].GetIdentifier()) {
+				index = i;
+				i = numNodes;
+			}
 		}
 
 		if (index == -1) {
@@ -263,6 +297,10 @@ namespace DjikAlg
 	}
 
 	void Network::ConnectNodes(int index1, int index2, unsigned __int32 forwardCost, unsigned __int32 backwardCost) {
+		if (index1==index2) {
+			std::cout << std::endl << "ConnectNodes Error: You cannot connect a node to itself." << std::endl;
+			return;
+		}
 		if (index1 >= numNodes) {
 			std::cout << std::endl << "ConnectNodes Error: The specified index '" << index1 << "' is too high for the number of nodes in the network," << std::endl << "you must specify an index less than " << numNodes << "." << std::endl;
 			return;
@@ -294,14 +332,17 @@ namespace DjikAlg
 		for (int i = 0; i < numNodes; i++) {
 			if (id1 == nodes[i].GetIdentifier()) index1 = i;
 			if (id2 == nodes[i].GetIdentifier()) index2 = i;
+			if (index1 >= 0 && index2 >= 0) {
+				i = numNodes;
+			}
 		}
 
 		if (index1 == -1) {
-			std::cout << std::endl << "RemoveNode Error: The ID '" << id1 << "' could not be found." << std::endl;
+			std::cout << std::endl << "ConnectNodes Error: The ID '" << id1 << "' could not be found." << std::endl;
 			return;
 		}
 		if (index2 == -1) {
-			std::cout << std::endl << "RemoveNode Error: The ID '" << id2 << "' could not be found." << std::endl;
+			std::cout << std::endl << "ConnectNodes Error: The ID '" << id2 << "' could not be found." << std::endl;
 			return;
 		}
 
@@ -314,14 +355,17 @@ namespace DjikAlg
 		for (int i = 0; i < numNodes; i++) {
 			if (id1 == nodes[i].GetIdentifier()) index1 = i;
 			if (id2 == nodes[i].GetIdentifier()) index2 = i;
+			if (index1 >= 0 && index2 >= 0) {
+				i = numNodes;
+			}
 		}
 
 		if (index1 == -1) {
-			std::cout << std::endl << "RemoveNode Error: The ID '" << id1 << "' could not be found." << std::endl;
+			std::cout << std::endl << "ConnectNodes Error: The ID '" << id1 << "' could not be found." << std::endl;
 			return;
 		}
 		if (index2 == -1) {
-			std::cout << std::endl << "RemoveNode Error: The ID '" << id2 << "' could not be found." << std::endl;
+			std::cout << std::endl << "ConnectNodes Error: The ID '" << id2 << "' could not be found." << std::endl;
 			return;
 		}
 
@@ -365,6 +409,9 @@ namespace DjikAlg
 		for (int i = 0; i < numNodes; i++) {
 			if (id1 == nodes[i].GetIdentifier()) index1 = i;
 			if (id2 == nodes[i].GetIdentifier()) index2 = i;
+			if (index1 >= 0 && index2 >= 0) {
+				i = numNodes;
+			}
 		}
 
 		if (index1 == -1) {
@@ -400,7 +447,10 @@ namespace DjikAlg
 	void Network::DetailedInfoForNode(char identifier) {
 		int index = -1;
 		for (int i = 0; i < numNodes; i++) {
-			if (identifier == nodes[i].GetIdentifier()) index = i;
+			if (identifier == nodes[i].GetIdentifier()) {
+				index = i;
+				i = numNodes;
+			}
 		}
 
 		if (index == -1) {
@@ -425,7 +475,10 @@ namespace DjikAlg
 	void Network::RenameNode(char identifier, char newName) {
 		int index = -1;
 		for (int i = 0; i < numNodes; i++) {
-			if (identifier == nodes[i].GetIdentifier()) index = i;
+			if (identifier == nodes[i].GetIdentifier()) {
+				index = i;
+				i = numNodes;
+			}
 		}
 
 		if (index == -1) {
@@ -443,8 +496,144 @@ namespace DjikAlg
 		}
 	}
 
+	void Network::DetailedInfoAllNodes() {
+		std::cout << std::endl << "Node list:" << std::endl;
+		for (int i = 0; i < numNodes; i++) {
+			std::cout << "\tNode " << nodes[i].GetIdentifier() << " (index = " << i << "), " << nodes[i].GetNumConnections() << " connections" << std::endl;
+			for (int j = 0; j < nodes[i].GetNumConnections(); j++) {
+				std::cout << "\t\tConnection to node '" << nodes[i].GetConnectedNode(j) << "' with cost " << nodes[i].GetConnectionCost(j) << std::endl;
+			}
+			std::cout << std::endl;
+		}
+	}
+
+	void Network::RunDjikstrasAlgorithm(int startNode, int destNode) {
+		delete[] optimalPath;
+		optimalPath = new char[numNodes];
+
+		nodes[startNode].SetAssociatedCost(0);
+
+		//algorithm loop
+		while (true) {
+			unsigned __int32 lowestAssociatedCost = 2000000000;
+			int selectedNode = 0;
+
+			// get node with lowest associated cost
+			for (int i = 0; i < numNodes; i++) {
+				if (nodes[i].GetAssociatedCost() < lowestAssociatedCost && !nodes[i].GetIsLocked()) {
+					selectedNode = i;
+					lowestAssociatedCost = nodes[i].GetAssociatedCost();
+				}
+			}
+
+			//lock it
+			nodes[selectedNode].LockNode();
+
+			if (selectedNode == destNode) {
+				optimalCost = nodes[selectedNode].GetAssociatedCost();
+
+				optimalPath[numNodes-1] = nodes[selectedNode].GetIdentifier();
+				int cPos = 1;
+				while (true) {
+					if (optimalPath[numNodes-cPos] == startNode) {
+						//move null chars to end
+						char* tempString = new char[numNodes];
+						int j = 0;
+						for (int i = 0; i < numNodes; i++) {
+							//check if place matches an node ID
+							int index = -1;
+							for (int k = 0; k < numNodes; k++) {
+								if (optimalPath[i] == nodes[k].GetIdentifier()) {
+									index = k;
+									k = numNodes;
+								}
+							}
+
+							if (index != -1) {
+								tempString[j] = optimalPath[i];
+								j++;
+							}
+						}
+
+						for (int i = 0; i < numNodes; i++) {
+							if (i < j) {
+								optimalPath[i] = tempString[i];
+							}
+							else {
+								optimalPath[i] = '\0';
+							}
+						}
+						delete[] tempString;
+						return;
+					}
+					int index = -1;
+
+					for (int i = 0; i < numNodes; i++) {
+						if (optimalPath[numNodes - cPos] == nodes[i].GetIdentifier()) {
+							index = i;
+							i = numNodes;
+						}
+					}
+
+					cPos++;
+					optimalPath[numNodes - cPos] = nodes[index].GetPriorNode();
+				}
+			}
+
+			//run through each connection and update associated costs if needed
+			for (int i = 0; i < nodes[selectedNode].GetNumConnections(); i++) {
+				unsigned int moveCost = nodes[selectedNode].GetAssociatedCost() + nodes[selectedNode].GetConnectionCost(i);
+				if (moveCost < nodes[selectedNode].GetConnectionAssociatedCost(i)) {
+					nodes[selectedNode].SetAsConnectionPriorNode(i, moveCost);
+				}
+			}
+
+		}
+	}
+
+	void Network::RunDjikstrasAlgorithm(char startNode, char destNode) {
+		int index1 = -1;
+		int index2 = -1;
+		for (int i = 0; i < numNodes; i++) {
+			if (startNode == nodes[i].GetIdentifier()) index1 = i;
+			if (destNode == nodes[i].GetIdentifier()) index2 = i;
+			if (index1 >= 0 && index2 >= 0) {
+				i = numNodes;
+			}
+		}
+
+		if (index1 == -1) {
+			std::cout << std::endl << "RunDjikstrasAlgorithm Error: The ID '" << startNode << "' could not be found." << std::endl;
+			return;
+		}
+		if (index2 == -1) {
+			std::cout << std::endl << "RunDjikstrasAlgorithm Error: The ID '" << destNode << "' could not be found." << std::endl;
+			return;
+		}
+
+		RunDjikstrasAlgorithm(index1, index2);
+	}
+
+	char* Network::GetOptimalPath() {
+		return optimalPath;
+	}
+
+	__int32 Network::GetOptimalCost() {
+		return optimalCost;
+	}
+
 	Network::Network() {
 		numNodes = 0;
 		numNodeSlots = 0;
+	}
+
+	void Network::ClearAllocatedMemory() {
+		delete[] optimalPath;
+
+		for (int i = 0; i < numNodes; i++) {
+			nodes[i].ClearConnections();
+		}
+
+		delete[] nodes;
 	}
 }
