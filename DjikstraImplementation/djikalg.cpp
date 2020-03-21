@@ -2,6 +2,8 @@
 #include "DjikAlg.h"
 #include <iostream>
 
+// Potential TODO: replace console output with ENUMS so that this library doesn't require a console application.
+
 namespace DjikAlg
 {
 	// Connection
@@ -563,9 +565,6 @@ namespace DjikAlg
 
 	// Run Djikstra's Algorithm on the network, specified by index
 	void Network::RunDjikstrasAlgorithm(int startNode, int destNode) {
-		delete[] optimalPath;
-		optimalPath = new char[numNodes];
-
 		for (int i = 0; i < numNodes; i++) {
 			nodes[i].SetAssociatedCost(2000000000);
 			nodes[i].UnlockNode();
@@ -575,7 +574,7 @@ namespace DjikAlg
 
 		//algorithm loop
 		while (true) {
-			unsigned __int32 lowestAssociatedCost = 2000000000;
+			unsigned __int32 lowestAssociatedCost = 2100000000;
 			int selectedNode = 0;
 
 			// get node with lowest associated cost
@@ -591,7 +590,15 @@ namespace DjikAlg
 
 			// exit algorithm is we lock the destination/target node
 			if (selectedNode == destNode) {
-				optimalCost = nodes[selectedNode].GetAssociatedCost();
+				if (nodes[selectedNode].GetAssociatedCost() == 2000000000) {
+					std::cout << std::endl << "WARNING: No possible route found between specified nodes, optimal cost and optimal path are either" << std::endl << "undefined or equal to previous algorithm run's result." << std::endl;
+					return;
+				}
+
+				delete[] optimalPath;
+				optimalPath = new char[numNodes];
+
+				optimalCost = nodes[selectedNode].GetAssociatedCost();				
 
 				optimalPath[numNodes-1] = nodes[selectedNode].GetIdentifier();
 				int cPos = 1;
