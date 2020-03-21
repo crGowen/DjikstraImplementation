@@ -708,7 +708,7 @@ namespace DjikAlg
 		optimalsFound = false;
 
 		// optimalPath and cost = undefined
-		optimalPath = new char[9];
+		optimalPath = new char[10];
 		optimalPath[0] = 'U';
 		optimalPath[1] = 'N';
 		optimalPath[2] = 'D';
@@ -718,6 +718,7 @@ namespace DjikAlg
 		optimalPath[6] = 'N';
 		optimalPath[7] = 'E';
 		optimalPath[8] = 'D';
+		optimalPath[9] = '\0';
 
 		optimalCost = 0;
 	}
