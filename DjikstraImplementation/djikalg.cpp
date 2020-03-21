@@ -596,7 +596,7 @@ namespace DjikAlg
 				}
 
 				delete[] optimalPath;
-				optimalPath = new char[numNodes];
+				optimalPath = new char[numNodes + 1];
 
 				optimalCost = nodes[selectedNode].GetAssociatedCost();				
 
@@ -625,7 +625,7 @@ namespace DjikAlg
 							}
 						}
 
-						for (int i = 0; i < numNodes; i++) {
+						for (int i = 0; i < numNodes + 1; i++) {
 							if (i < j) {
 								optimalPath[i] = tempString[i];
 							}
