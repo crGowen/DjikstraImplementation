@@ -254,6 +254,11 @@ namespace DjikAlg
 
 	// Add a node to the network, specifying what its ID should be
 	void Network::AddNode(char identifier) {
+		if (identifier == '\0') {
+			std::cout << std::endl << "AddNode Error: ID is invalid!" << std::endl;
+			return;
+		}
+
 		for (int i = 0; i < numNodes; i++) {
 			if (identifier == nodes[i].GetIdentifier()) {
 				std::cout << std::endl << "AddNode Error: Node with ID '" << identifier << "' already exists, and will not be added." << std::endl;
@@ -591,51 +596,32 @@ namespace DjikAlg
 			// exit algorithm is we lock the destination/target node
 			if (selectedNode == destNode) {
 				if (nodes[selectedNode].GetAssociatedCost() == 2000000000) {
-					std::cout << std::endl << "WARNING: No possible route found between specified nodes, optimal cost and optimal path are either" << std::endl << "undefined or equal to previous algorithm run's result." << std::endl;
+					std::cout << std::endl << "RunDjikstrasAlgorithm Error: No possible route found between '" << nodes[startNode].GetIdentifier() << "' (index = " << startNode << ") and '" << nodes[destNode].GetIdentifier() << "' (index = " << destNode << ")," << std::endl << "optimal cost and optimal path are either undefined or equal to previous algorithm run's result." << std::endl;
 					return;
 				}
 
 				delete[] optimalPath;
-				optimalPath = new char[numNodes + 1];
+				char* tempString = new char[numNodes + 1];
 
 				optimalCost = nodes[selectedNode].GetAssociatedCost();				
 
-				optimalPath[numNodes-1] = nodes[selectedNode].GetIdentifier();
-				int cPos = 1;
+				tempString[numNodes] = '\0';
+
+				int pathLength = 1;
+				tempString[numNodes-1] = nodes[selectedNode].GetIdentifier(); // start 1 before the last char (last char is the null char)	
 
 				// write optimalpath string
 				while (true) {
-					// we only enter if statement once we've built the full string representing the route (which will have null chars at the front), until then we go to the for loop below
-					if (optimalPath[numNodes-cPos] == nodes[startNode].GetIdentifier()) {
-						//move null chars to end
-						char* tempString = new char[numNodes];
-						int j = 0;
-						for (int i = 0; i < numNodes; i++) {
+					// we only enter this if statement's body once we've built the full string representing the route (which will have null chars at the front), until then we go to the for loop below
+					if (tempString[numNodes-pathLength] == nodes[startNode].GetIdentifier()) {
+						// reduce string to the actual length of the path (+ null char)
+						optimalPath = new char[pathLength + 1];
+						optimalPath[pathLength] = '\0';
+						for (int i = 0; i < pathLength; i++) {
 							//check if place matches an node ID (i.e. that is ISN'T A NULL CHAR)
-							int index = -1;
-							for (int k = 0; k < numNodes; k++) {
-								if (optimalPath[i] == nodes[k].GetIdentifier()) {
-									index = k;
-									k = numNodes;
-								}
-							}
-
-							// if we found one, we can add to it our tempString
-							if (index != -1) {
-								tempString[j] = optimalPath[i];
-								j++;
-							}
+							optimalPath[i] = tempString[numNodes - pathLength + i];
 						}
-						
-						// once do for the entire route, we have effectively *removed* the null chars, but we still need them, the simplest thing to do is to just dump them all at the end of the char array
-						for (int i = 0; i < numNodes + 1; i++) {
-							if (i < j) {
-								optimalPath[i] = tempString[i];
-							}
-							else {
-								optimalPath[i] = '\0';
-							}
-						}
+					
 						delete[] tempString;
 						optimalsFound = true;
 						return;
@@ -645,14 +631,14 @@ namespace DjikAlg
 					int index = -1;
 
 					for (int i = 0; i < numNodes; i++) {
-						if (optimalPath[numNodes - cPos] == nodes[i].GetIdentifier()) {
-							index = i;
+						if (tempString[numNodes - pathLength] == nodes[i].GetIdentifier()) {
+							index = i;							
 							i = numNodes;
 						}
 					}
-					cPos++;
+					pathLength++;
 					//then use this index to get the prior node in the optimal route.
-					optimalPath[numNodes - cPos] = nodes[index].GetPriorNode();
+					tempString[numNodes - pathLength] = nodes[index].GetPriorNode();
 				}
 			}
 
