@@ -605,12 +605,13 @@ namespace DjikAlg
 
 				// write optimalpath string
 				while (true) {
+					// we only enter if statement once we've built the full string representing the route (which will have null chars at the front), until then we go to the for loop below
 					if (optimalPath[numNodes-cPos] == nodes[startNode].GetIdentifier()) {
 						//move null chars to end
 						char* tempString = new char[numNodes];
 						int j = 0;
 						for (int i = 0; i < numNodes; i++) {
-							//check if place matches an node ID
+							//check if place matches an node ID (i.e. that is ISN'T A NULL CHAR)
 							int index = -1;
 							for (int k = 0; k < numNodes; k++) {
 								if (optimalPath[i] == nodes[k].GetIdentifier()) {
@@ -619,12 +620,14 @@ namespace DjikAlg
 								}
 							}
 
+							// if we found one, we can add to it our tempString
 							if (index != -1) {
 								tempString[j] = optimalPath[i];
 								j++;
 							}
 						}
-
+						
+						// once do for the entire route, we have effectively *removed* the null chars, but we still need them, the simplest thing to do is to just dump them all at the end of the char array
 						for (int i = 0; i < numNodes + 1; i++) {
 							if (i < j) {
 								optimalPath[i] = tempString[i];
@@ -637,6 +640,8 @@ namespace DjikAlg
 						optimalsFound = true;
 						return;
 					}
+
+					// if we have not yet built the string representing the route, do this (find the index of the current end of the route-string)...
 					int index = -1;
 
 					for (int i = 0; i < numNodes; i++) {
@@ -646,6 +651,7 @@ namespace DjikAlg
 						}
 					}
 					cPos++;
+					//then use this index to get the prior node in the optimal route.
 					optimalPath[numNodes - cPos] = nodes[index].GetPriorNode();
 				}
 			}
