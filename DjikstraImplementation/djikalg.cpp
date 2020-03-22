@@ -368,6 +368,11 @@ namespace DjikAlg
 			}
 		}
 
+		if (forwardCost >= 1000 || backwardCost >= 1000) {
+			std::cout << std::endl << "ConnectNodes Error: Edge costs must be less than 1000!" << std::endl;
+			return;
+		}
+
 		nodes[index1].AddConnection(&nodes[index2], forwardCost);
 		nodes[index2].AddConnection(&nodes[index1], backwardCost);
 	}
