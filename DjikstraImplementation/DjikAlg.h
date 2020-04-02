@@ -45,12 +45,11 @@ namespace DjikAlg {
 			void SetAsConnectionPriorNode(int index, unsigned __int32 newAssociatedCost);
 
 		private:
-
 			Connection* connections;
 			unsigned __int32 numConnections;
 			unsigned __int32 numConnectionSlots;
-			char id;
 			unsigned __int32 associatedCost;
+			char id;			
 			bool isLocked;
 			char priorNode;
 		};
@@ -91,10 +90,8 @@ namespace DjikAlg {
 		Node* nodes;
 		unsigned __int32 numNodes;
 		unsigned __int32 numNodeSlots;
-		bool optimalsFound;
-
-
 		char* optimalPath;
 		__int32 optimalCost;
+		bool optimalsFound;	
 	};
 }
