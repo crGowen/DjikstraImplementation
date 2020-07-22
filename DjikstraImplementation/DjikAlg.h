@@ -1,9 +1,19 @@
-namespace DjikAlg {
-	class Network {
+#pragma once
+
+#include <iostream>
+
+#ifdef MAKE_DLL
+#define DLL_IMEX __declspec(dllexport)
+#else
+#define DLL_IMEX __declspec(dllimport)
+#endif
+
+extern "C" {
+	class DLL_IMEX Network {
 	public:
-		class Node {
+		class DLL_IMEX Node {
 		public:
-			class Connection {
+			class DLL_IMEX Connection {
 			private:
 				Node* connectedNode;
 				unsigned __int32 edgeCost;
