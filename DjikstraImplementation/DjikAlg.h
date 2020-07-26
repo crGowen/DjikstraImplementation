@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 #ifdef MAKE_DLL
 #define DLL_IMEX __declspec(dllexport)
 #else

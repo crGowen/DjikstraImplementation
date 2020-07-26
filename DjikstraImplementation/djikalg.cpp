@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <iostream>
 #include "djikalg.h"
 
 // Potential TODO: replace console output with ENUMS so that this library doesn't require a console application.
